@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=SKlauncher
+Comment=Minecraft Launcher
+Exec=/home/avi/.sklauncher/SKlauncher-4.0.48-x86_64.AppImage
+Icon=sklauncher
+Terminal=false
+Type=Application
+Categories=Game;
+

@@ -1,0 +1,58 @@
+#!/usr/bin/env fish
+
+set CONFIG "$HOME/scripts/glacier/config"
+
+function config_value
+    set -l key $argv[1]
+    grep "^$key=" "$CONFIG" | string replace "$key=" "" | head -n1
+end
+
+set zone_x (config_value zone_x)
+set zone_y (config_value zone_y)
+set zone_width (config_value zone_width)
+set zone_height (config_value zone_height)
+
+set zone_right (math "$zone_x + $zone_width")
+set zone_bottom (math "$zone_y + $zone_height")
+
+set blacklist (config_value app_blacklist | string split ",")
+set active_workspace (hyprctl -j activeworkspace | jq -r ".id")
+
+for client in (hyprctl -j clients | jq -c ".[]")
+    set class (echo "$client" | jq -r ".class")
+    set workspace_id (echo "$client" | jq -r ".workspace.id")
+    set mapped (echo "$client" | jq -r ".mapped")
+
+    if test "$workspace_id" != "$active_workspace"; or test "$mapped" != "true"
+        continue
+    end
+
+    set ignored false
+    for blocked in $blacklist
+        set blocked (string trim "$blocked")
+        if test -n "$blocked"; and string match -q -i "$blocked" "$class"
+            set ignored true
+            break
+        end
+    end
+
+    if $ignored
+        continue
+    end
+
+    set x (echo "$client" | jq -r ".at[0]")
+    set y (echo "$client" | jq -r ".at[1]")
+    set width (echo "$client" | jq -r ".size[0]")
+    set height (echo "$client" | jq -r ".size[1]")
+
+    set right (math "$x + $width")
+    set bottom (math "$y + $height")
+
+    if test "$right" -gt "$zone_x"; and test "$x" -lt "$zone_right"; and test "$bottom" -gt "$zone_y"; and test "$y" -lt "$zone_bottom"
+        echo "COLLISION"
+        exit 0
+    end
+end
+
+echo "CLEAR"
+exit 1

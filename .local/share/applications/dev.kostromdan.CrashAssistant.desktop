@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Crash Assistant
+Comment=Minecraft crash diagnostics
+Icon=/home/avi/.local/share/crash-assistant/logo.png
+Exec=/bin/true
+Terminal=false
+NoDisplay=true
+StartupNotify=false
+StartupWMClass=dev-kostromdan-mods-crash_assistant-app-class_loading-Boot
+SingleMainWindow=true

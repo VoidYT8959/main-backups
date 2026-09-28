@@ -1,0 +1,11 @@
+# DynamicGlacier collision system
+
+# Hyprland window classes ignored by collision detection.
+app_blacklist=
+
+# Glacier's protected screen rectangle.
+# Coordinates are in Hyprland global screen coordinates.
+zone_x=835
+zone_y=0
+zone_width=250
+zone_height=32
